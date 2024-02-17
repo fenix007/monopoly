@@ -24,7 +24,7 @@ function Game() {
 			p.AI.payDebt();
 
 			if (p.money < 0) {
-				popup("<p>" + p.name + " is bankrupt. All of its assets will be turned over to " + player[p.creditor].name + ".</p>", game.bankruptcy);
+				popup("<p>" + p.name + " банкрот. Все его карточки будут переданы " + player[p.creditor].name + ".</p>", game.bankruptcy);
 			} else {
 				roll();
 			}
@@ -59,7 +59,7 @@ function Game() {
 		if (highestbid > 0) {
 			p.pay(highestbid, 0);
 			sq.owner = highestbidder;
-			addAlert(p.name + " bought " + sq.name + " for $" + highestbid + ".");
+			addAlert(p.name + " купил " + sq.name + " за " + highestbid + "k.");
 		}
 
 		for (var i = 1; i <= pcount; i++) {
@@ -592,7 +592,7 @@ function Game() {
 				resetTrade(currentInitiator, player[parseInt(this.value, 10)], true);
 			};
 
-			nameSelect.title = "Select a player to trade with.";
+			nameSelect.title = "Выбери игрока для торгов.";
 		} else {
 			currentName.textContent = recipient.name;
 		}
@@ -992,7 +992,7 @@ function Game() {
 			// }
 			// document.getElementById("refresh").innerHTML += "<br><br><div><textarea type='text' style='width: 980px;' onclick='javascript:select();' />" + text + "</textarea></div>";
 
-			popup("<p>Congratulations, " + player[1].name + ", you have won the game.</p><div>");
+			popup("<p>Поздравляю, " + player[1].name + ", вы выиграли игру.</p><div>");
 
 		} else {
 			play();
@@ -1024,7 +1024,7 @@ function Game() {
 				}
 
 				// Player already paid interest, so they can unmortgage for the mortgage price.
-				HTML += "' onmouseover='showdeed(" + i + ");' onmouseout='hidedeed();'></td><td class='propertycellname'><a href='javascript:void(0);' title='Unmortgage " + sq.name + " for $" + price + ".' onclick='if (" + price + " <= player[" + p.creditor + "].money) {player[" + p.creditor + "].pay(" + price + ", 0); square[" + i + "].mortgage = false; addAlert(\"" + player[p.creditor].name + " unmortgaged " + sq.name + " for $" + price + ".\");} this.parentElement.parentElement.style.display = \"none\";'>Unmortgage " + sq.name + " ($" + price + ")</a></td></tr>";
+				HTML += "' onmouseover='showdeed(" + i + ");' onmouseout='hidedeed();'></td><td class='propertycellname'><a href='javascript:void(0);' title='Unmortgage " + sq.name + " for $" + price + ".' onclick='if (" + price + " <= player[" + p.creditor + "].money) {player[" + p.creditor + "].pay(" + price + ", 0); square[" + i + "].mortgage = false; addAlert(\"" + player[p.creditor].name + " выкупить " + sq.name + " за " + price + "k.\");} this.parentElement.parentElement.style.display = \"none\";'>Выкупить " + sq.name + " (" + price + "k)</a></td></tr>";
 
 				sq.owner = p.creditor;
 
@@ -1108,14 +1108,16 @@ var game;
 
 
 function Player(name, color) {
+	const MONOPOLYONE = 'monopolyone';
+	const NEWYORKCITY = 'newyorkcity';
+	this.edition = MONOPOLYONE;
 	this.name = name;
 	this.color = color;
 	this.position = 0;
-	this.money = 1500;
+	this.money = this.edition === MONOPOLYONE ? 15000 : 1500;
 	this.creditor = -1;
 	this.jail = false;
 	this.jailroll = 0;
-	this.communityChestJailCard = false;
 	this.chanceJailCard = false;
 	this.bidding = true;
 	this.human = true;
@@ -1601,19 +1603,19 @@ function updateOption() {
 			buyhousebutton.disabled = false;
 			sellhousebutton.disabled = false;
 
-			buyhousebutton.value = "Buy house ($" + sq.houseprice + ")";
-			sellhousebutton.value = "Sell house ($" + (sq.houseprice * 0.5) + ")";
-			buyhousebutton.title = "Buy a house for $" + sq.houseprice;
-			sellhousebutton.title = "Sell a house for $" + (sq.houseprice * 0.5);
+			buyhousebutton.value = "Купи дом (" + sq.houseprice + "k)";
+			sellhousebutton.value = "Продай дом (" + (sq.houseprice * 0.5) + "k)";
+			buyhousebutton.title = "Купи дом за $" + sq.houseprice;
+			sellhousebutton.title = "Продай дом за $" + (sq.houseprice * 0.5);
 
 			if (sq.house == 4) {
-				buyhousebutton.value = "Buy hotel ($" + sq.houseprice + ")";
-				buyhousebutton.title = "Buy a hotel for $" + sq.houseprice;
+				buyhousebutton.value = "Купи отель ($" + sq.houseprice + "k)";
+				buyhousebutton.title = "Купи отель за $" + sq.houseprice;
 			}
 			if (sq.hotel == 1) {
 				$("#buyhousebutton").hide();
-				sellhousebutton.value = "Sell hotel ($" + (sq.houseprice * 0.5) + ")";
-				sellhousebutton.title = "Sell a hotel for $" + (sq.houseprice * 0.5);
+				sellhousebutton.value = "Продай отель ($" + (sq.houseprice * 0.5) + "k)";
+				sellhousebutton.title = "Продай отель за $" + (sq.houseprice * 0.5);
 			}
 
 			var maxhouse = 0;
@@ -1726,7 +1728,7 @@ function chanceCommunityChest() {
 		}
 
 	// Chance
-	} else if (p.position === 7 || p.position === 22 || p.position === 36) {
+	} else if ([2, 7, 17, 22, 33, 38].indexOf(p.position) !== -1) {
 		var chanceIndex = chanceCards.deck[chanceCards.index];
 
 		// Remove the get out of jail free card from the deck.
@@ -1803,13 +1805,13 @@ function subtractamount(amount, cause) {
 function gotojail() {
 	var p = player[turn];
 	addAlert(p.name + " was sent directly to jail.");
-	document.getElementById("landed").innerHTML = "You are in jail.";
+	document.getElementById("landed").innerHTML = "Ты в тюрьме.";
 
 	p.jail = true;
 	doublecount = 0;
 
-	document.getElementById("nextbutton").value = "End turn";
-	document.getElementById("nextbutton").title = "End turn and advance to the next player.";
+	document.getElementById("nextbutton").value = "Конец хода";
+	document.getElementById("nextbutton").title = "Ход следующему игроку.";
 
 	if (p.human) {
 		document.getElementById("nextbutton").focus();
@@ -1879,16 +1881,16 @@ function advance(destination, pass) {
 			p.position = pass;
 		} else {
 			p.position = pass;
-			p.money += 200;
-			addAlert(p.name + " collected a $200 salary for passing GO.");
+			p.money += 2000;
+			addAlert(p.name + " забери 2000k пройдя СТАРТ.");
 		}
 	}
 	if (p.position < destination) {
 		p.position = destination;
 	} else {
 		p.position = destination;
-		p.money += 200;
-		addAlert(p.name + " collected a $200 salary for passing GO.");
+		p.money += 2000;
+		addAlert(p.name + " забери 2000k пройдя СТАРТ.");
 	}
 
 	land();
@@ -1903,8 +1905,8 @@ function advanceToNearestUtility() {
 		p.position = 28;
 	} else if (p.position >= 28) {
 		p.position = 12;
-		p.money += 200;
-		addAlert(p.name + " collected a $200 salary for passing GO.");
+		p.money += 2000;
+		addAlert(p.name + " забери 2000k пройдя СТАРТ.");
 	}
 
 	land(true);
@@ -1921,8 +1923,8 @@ function advanceToNearestRailroad() {
 		p.position = 25;
 	} else if (p.position >= 35) {
 		p.position = 5;
-		p.money += 200;
-		addAlert(p.name + " collected a $200 salary for passing GO.");
+		p.money += 2000;
+		addAlert(p.name + " забери 2000k пройдя СТАРТ.");
 	}
 
 	land(true);
@@ -1967,7 +1969,7 @@ function payfifty() {
 	p.jail = false;
 	p.jailroll = 0;
 	p.position = 10;
-	p.pay(50, 0);
+	p.pay(500, 0);
 
 	addAlert(p.name + " paid the $50 fine to get out of jail.");
 	updateMoney();
@@ -2302,7 +2304,7 @@ function land(increasedRent) {
 				buy();
 			}
 		} else {
-			document.getElementById("landed").innerHTML = "<div>You landed on <a href='javascript:void(0);' onmouseover='showdeed(" + p.position + ");' onmouseout='hidedeed();' class='statscellcolor'>" + s.name + "</a>.<input type='button' onclick='buy();' value='Buy ($" + s.price + ")' title='Buy " + s.name + " for " + s.pricetext + ".'/></div>";
+			document.getElementById("landed").innerHTML = "<div>You landed on <a href='javascript:void(0);' onmouseover='showdeed(" + p.position + ");' onmouseout='hidedeed();' class='statscellcolor'>" + s.name + "</a>.<input type='button' onclick='buy();' value='Купить ($" + s.price + ")' title='Купить " + s.name + " for " + s.pricetext + ".'/></div>";
 		}
 
 
@@ -2317,9 +2319,9 @@ function land(increasedRent) {
 		// Railroads
 		if (p.position == 5 || p.position == 15 || p.position == 25 || p.position == 35) {
 			if (increasedRent) {
-				rent = 25;
+				rent = 250;
 			} else {
-				rent = 12.5;
+				rent = 125;
 			}
 
 			if (s.owner == square[5].owner) {
@@ -2337,16 +2339,16 @@ function land(increasedRent) {
 
 		} else if (p.position === 12) {
 			if (increasedRent || square[28].owner == s.owner) {
-				rent = (die1 + die2) * 10;
+				rent = (die1 + die2) * 250;
 			} else {
-				rent = (die1 + die2) * 4;
+				rent = (die1 + die2) * 100;
 			}
 
 		} else if (p.position === 28) {
 			if (increasedRent || square[12].owner == s.owner) {
-				rent = (die1 + die2) * 10;
+				rent = (die1 + die2) * 250;
 			} else {
-				rent = (die1 + die2) * 4;
+				rent = (die1 + die2) * 100;
 			}
 
 		} else {
@@ -2369,13 +2371,13 @@ function land(increasedRent) {
 			}
 		}
 
-		addAlert(p.name + " paid $" + rent + " rent to " + player[s.owner].name + ".");
+		addAlert(p.name + " заплатил " + rent + "k ренты " + player[s.owner].name + ".");
 		p.pay(rent, s.owner);
 		player[s.owner].money += rent;
 
-		document.getElementById("landed").innerHTML = "You landed on " + s.name + ". " + player[s.owner].name + " collected $" + rent + " rent.";
+		document.getElementById("landed").innerHTML = "Ты пришел на " + s.name + ". " + player[s.owner].name + " забирает " + rent + "k ренты.";
 	} else if (s.owner > 0 && s.owner != turn && s.mortgage) {
-		document.getElementById("landed").innerHTML = "You landed on " + s.name + ". Property is mortgaged; no rent was collected.";
+		document.getElementById("landed").innerHTML = "Ты пришел на " + s.name + ". Карточка в залоге; рента не собирается.";
 	}
 
 	// City Tax
@@ -2383,13 +2385,13 @@ function land(increasedRent) {
 		citytax();
 	}
 
-	// Go to jail. Go directly to Jail. Do not pass GO. Do not collect $200.
+	// Go to jail. Go directly to Jail. Do not pass GO. Do not collect $2000.
 	if (p.position === 30) {
 		updateMoney();
 		updatePosition();
 
 		if (p.human) {
-			popup("<div>Go to jail. Go directly to Jail. Do not pass GO. Do not collect $200.</div>", gotojail);
+			popup("<div>Go to jail. Go directly to Jail. Do not pass GO. Do not collect $2000.</div>", gotojail);
 		} else {
 			gotojail();
 		}
@@ -2398,7 +2400,7 @@ function land(increasedRent) {
 	}
 
 	// Luxury Tax
-	if (p.position === 38) {
+	if (p.position === 36) {
 		luxurytax();
 	}
 
@@ -2424,8 +2426,8 @@ function roll() {
 	if (p.human) {
 		document.getElementById("nextbutton").focus();
 	}
-	document.getElementById("nextbutton").value = "End turn";
-	document.getElementById("nextbutton").title = "End turn and advance to the next player.";
+	document.getElementById("nextbutton").value = "Конец хода";
+	document.getElementById("nextbutton").title = "Передай ход следующему игроку.";
 
 	game.rollDice();
 	var die1 = game.getDie(1);
@@ -2443,19 +2445,19 @@ function roll() {
 		updateDice(die1, die2);
 
 		if (doublecount < 3) {
-			document.getElementById("nextbutton").value = "Roll again";
-			document.getElementById("nextbutton").title = "You threw doubles. Roll again.";
+			document.getElementById("nextbutton").value = "Бросай снова";
+			document.getElementById("nextbutton").title = "Дубль. Бросай снова.";
 
 		// If player rolls doubles three times in a row, send him to jail
 		} else if (doublecount === 3) {
 			p.jail = true;
 			doublecount = 0;
-			addAlert(p.name + " rolled doubles three times in a row.");
+			addAlert(p.name + " выбросил дубль 3 раза подряд.");
 			updateMoney();
 
 
 			if (p.human) {
-				popup("You rolled doubles three times in a row. Go to jail.", gotojail);
+				popup("Ты выбросил дубль 3 раза подряд. Иди в тюрьму.", gotojail);
 			} else {
 				gotojail();
 			}
@@ -2463,8 +2465,8 @@ function roll() {
 			return;
 		}
 	} else {
-		document.getElementById("nextbutton").value = "End turn";
-		document.getElementById("nextbutton").title = "End turn and advance to the next player.";
+		document.getElementById("nextbutton").value = "Конец хода";
+		document.getElementById("nextbutton").title = "Конец хода, ходит следующий.";
 		doublecount = 0;
 	}
 
@@ -2486,14 +2488,14 @@ function roll() {
 			p.position = 10 + die1 + die2;
 			doublecount = 0;
 
-			addAlert(p.name + " rolled doubles to get out of jail.");
+			addAlert(p.name + " выбросите дубль для выхода из тюрьмы.");
 
 			land();
 		} else {
 			if (p.jailroll === 3) {
 
 				if (p.human) {
-					popup("<p>You must pay the $50 fine.</p>", function() {
+					popup("<p>Заплатите 500k для выхода из тюрьмы.</p>", function() {
 						payfifty();
 						player[turn].position=10 + die1 + die2;
 						land();
@@ -2505,7 +2507,7 @@ function roll() {
 				}
 			} else {
 				$("#landed").show();
-				document.getElementById("landed").innerHTML = "You are in jail.";
+				document.getElementById("landed").innerHTML = "Ты в тюрьму";
 
 				if (!p.human) {
 					popup(p.AI.alertList, game.next);
@@ -2521,11 +2523,11 @@ function roll() {
 		// Move player
 		p.position += die1 + die2;
 
-		// Collect $200 salary as you pass GO
+		// Collect $2000 salary as you pass GO
 		if (p.position >= 40) {
 			p.position -= 40;
-			p.money += 200;
-			addAlert(p.name + " collected a $200 salary for passing GO.");
+			p.money += 2000;
+			addAlert(p.name + " забери 2000k пройдя СТАРТ.");
 		}
 
 		land();
@@ -2547,7 +2549,7 @@ function play() {
 
 	document.getElementById("pname").innerHTML = p.name;
 
-	addAlert("It is " + p.name + "'s turn.");
+	addAlert("Ходит " + p.name);
 
 	// Check for bankruptcy.
 	p.pay(0, p.creditor);
@@ -2559,7 +2561,7 @@ function play() {
 	if (p.human) {
 		document.getElementById("nextbutton").focus();
 	}
-	document.getElementById("nextbutton").value = "Roll Dice";
+	document.getElementById("nextbutton").value = "Бросай кости";
 	document.getElementById("nextbutton").title = "Roll the dice and move your token accordingly.";
 
 	$("#die0").hide();
@@ -2567,7 +2569,7 @@ function play() {
 
 	if (p.jail) {
 		$("#landed").show();
-		document.getElementById("landed").innerHTML = "You are in jail.<input type='button' title='Pay $50 fine to get out of jail immediately.' value='Pay $50 fine' onclick='payfifty();' />";
+		document.getElementById("landed").innerHTML = "You are in jail.<input type='button' title='Заплати 500k для выхода из тюрьмы.' value='Заплати 500k' onclick='payfifty();' />";
 
 		if (p.communityChestJailCard || p.chanceJailCard) {
 			document.getElementById("landed").innerHTML += "<input type='button' id='gojfbutton' title='Use &quot;Get Out of Jail Free&quot; card.' onclick='useJailCard();' value='Use Card' />";
@@ -2738,7 +2740,7 @@ window.onload = function() {
 	AITest.count = 0;
 
 	player[1].human = true;
-	player[0].name = "the bank";
+	player[0].name = "банк";
 
 	communityChestCards.index = 0;
 	chanceCards.index = 0;
@@ -2746,9 +2748,9 @@ window.onload = function() {
 	communityChestCards.deck = [];
 	chanceCards.deck = [];
 
-	for (var i = 0; i < 16; i++) {
+	for (var i = 0; i < 32; i++) {
 		chanceCards.deck[i] = i;
-		communityChestCards.deck[i] = i;
+		// communityChestCards.deck[i] = i;
 	}
 
 	// Shuffle Chance and Community Chest decks.
@@ -2816,9 +2818,9 @@ window.onload = function() {
 	// Add images to enlarges.
 	document.getElementById("enlarge0token").innerHTML += '<img src="images/arrow_icon.png" height="40" width="136" alt="" />';
 	document.getElementById("enlarge20price").innerHTML += "<img src='images/free_parking_icon.png' height='80' width='72' alt='' style='position: relative; top: -20px;' />";
-	document.getElementById("enlarge38token").innerHTML += '<img src="images/tax_icon.png" height="60" width="70" alt="" style="position: relative; top: -20px;" />';
+	document.getElementById("enlarge36token").innerHTML += '<img src="images/tax_icon.png" height="60" width="70" alt="" style="position: relative; top: -20px;" />';
 
-	corrections();
+	// corrections();
 
 	// Jail corrections
 	$("<div>", {id: "jailpositionholder" }).appendTo("#jail");
@@ -2931,15 +2933,15 @@ window.onload = function() {
 
 		if (s.mortgage) {
 			if (player[s.owner].money < Math.round(s.price * 0.55)) {
-				popup("<p>You need $" + (Math.round(s.price * 0.55) - player[s.owner].money) + " more to unmortgage " + s.name + ".</p>");
+				popup("<p>Тебе нужно " + (Math.round(s.price * 0.55) - player[s.owner].money) + "k чтобы выкупить " + s.name + ".</p>");
 
 			} else {
-				popup("<p>" + player[s.owner].name + ", are you sure you want to unmortgage " + s.name + " for $" + Math.round(s.price * 0.55) + "?</p>", function() {
+				popup("<p>" + player[s.owner].name + ", ты уверен, что хочешь выкупить " + s.name + " за " + Math.round(s.price * 0.55) + "k?</p>", function() {
 					unmortgage(checkedProperty);
 				}, "Yes/No");
 			}
 		} else {
-			popup("<p>" + player[s.owner].name + ", are you sure you want to mortgage " + s.name + " for $" + Math.round(s.price * 0.5) + "?</p>", function() {
+			popup("<p>" + player[s.owner].name + ", ты уверен, что хочешь заложить " + s.name + " за " + Math.round(s.price * 0.5) + "k?</p>", function() {
 				mortgage(checkedProperty);
 			}, "Yes/No");
 		}
@@ -2955,10 +2957,10 @@ window.onload = function() {
 
 		if (p.money < s.houseprice) {
 			if (s.house === 4) {
-				popup("<p>You need $" + (s.houseprice - player[s.owner].money) + " more to buy a hotel for " + s.name + ".</p>");
+				popup("<p>Тебе нужно еще " + (s.houseprice - player[s.owner].money) + "k для покупки дома " + s.name + ".</p>");
 				return;
 			} else {
-				popup("<p>You need $" + (s.houseprice - player[s.owner].money) + " more to buy a house for " + s.name + ".</p>");
+				popup("<p>Тебе нужно еще $" + (s.houseprice - player[s.owner].money) + " для покупки отеля " + s.name + ".</p>");
 				return;
 			}
 		}

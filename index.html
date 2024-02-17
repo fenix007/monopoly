@@ -5,9 +5,10 @@
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script type="text/javascript" src="classicedition.js"></script>
+	<!--	<script type="text/javascript" src="classicedition.js"></script>-->
 	<!-- Comment out the previous line and uncomment the next one to enable the New York City Edition -->
 	<!-- <script type="text/javascript" src="newyorkcityedition.js"></script> -->
+	<script type="text/javascript" src="monopolyoneedition.js"></script>
 	<script type="text/javascript" src="ai.js"></script>
 	<script type="text/javascript" src="monopoly.js"></script>
 	<link rel="stylesheet" type="text/css" href="styles.css" />
@@ -55,31 +56,31 @@
 			<table id="deed-table">
 				<tr>
 					<td colspan="2">
-						RENT&nbsp;$<span id="deed-baserent">12</span>.
+						RENT<span id="deed-baserent">12</span>&nbsp;k.
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: left;">With 1 House</td>
-					<td style="text-align: right;">$&nbsp;&nbsp;&nbsp;<span id="deed-rent1">60</span>.</td>
+					<td style="text-align: left;">С 1 домом</td>
+					<td style="text-align: right;">&nbsp;&nbsp;&nbsp;k<span id="deed-rent1">60</span>.</td>
 				</tr>
 				<tr>
-					<td style="text-align: left;">With 2 Houses</td>
+					<td style="text-align: left;">С 2 домами</td>
 					<td style="text-align: right;"><span id="deed-rent2">180</span>.</td>
 				</tr>
 				<tr>
-					<td style="text-align: left;">With 3 Houses</td>
+					<td style="text-align: left;">С 3 домами</td>
 					<td style="text-align: right;"><span id="deed-rent3">500</span>.</td>
 				</tr>
 				<tr>
-					<td style="text-align: left;">With 4 Houses</td>
+					<td style="text-align: left;">С 4 домами</td>
 					<td style="text-align: right;"><span id="deed-rent4">700</span>.</td>
 				</tr>
 				<tr>
 					<td colspan="2">
-						<div style="margin-bottom: 8px;">With HOTEL $<span id="deed-rent5">900</span>.</div>
-						<div>Mortgage Value $<span id="deed-mortgage">80</span>.</div>
-						<div>Houses cost $<span id="deed-houseprice">100</span>. each</div>
-						<div>Hotels, $<span id="deed-hotelprice">100</span>. plus 4 houses</div>
+						<div style="margin-bottom: 8px;">С отелем <span id="deed-rent5">900k</span>.</div>
+						<div>Mortgage Value <span id="deed-mortgage">80k</span>.</div>
+						<div>Houses cost <span id="deed-houseprice">100k</span>. each</div>
+						<div>Hotels, <span id="deed-hotelprice">100k</span>. plus 4 houses</div>
 						<div style="font-size: 9px; font-style: italic; margin-top: 5px;">If a player owns ALL the Lots of any Color-Group, the rent is Doubled on Unimproved Lots in that group.</div>
 					</td>
 				</tr>
@@ -478,15 +479,15 @@
 							<tr>
 								<td class="menu-item" id="buy-menu-item">
 
-									<a href="javascript:void(0);" title="View alerts and buy the property you landed on.">Buy</a>
+									<a href="javascript:void(0);" title="View alerts and buy the property you landed on.">Купить</a>
 								</td>
 								<td class="menu-item" id="manage-menu-item">
 
-									<a href="javascript:void(0);" title="View, mortgage, and improve your property. ">Manage</a>
+									<a href="javascript:void(0);" title="View, mortgage, and improve your property. ">Управлять</a>
 								</td>
 								<td class="menu-item" id="trade-menu-item">
 
-									<a href="javascript:void(0);" title="Exchange property with other players.">Trade</a>
+									<a href="javascript:void(0);" title="Exchange property with other players.">Договор</a>
 								</td>
 							</tr>
 						</table>
@@ -510,7 +511,7 @@
 				<td style="vertical-align: top; border: none;">
 					<div id="quickstats" style="">
 							<div><span id="pname" >Player 1</span>:</div>
-							<div><span id="pmoney">$1500</span></div>
+							<div><span id="pmoney">15000k</span></div>
 					</div>
 					<div>
 						<div id="die0" title="Die" class="die die-no-img"></div>
@@ -521,7 +522,7 @@
 			</tr><tr>
 				<td colspan="2" style="border: none">
 					<div style="padding-top: 8px;">
-						<input type="button" id="nextbutton" title="Roll the dice and move your token accordingly." value="Roll Dice"/>
+						<input type="button" id="nextbutton" title="Roll the dice and move your token accordingly." value="Бросай кубики"/>
 						<input type="button" id="resignbutton" title="If you cannot pay your debt then you must resign from the game." value="Resign" onclick="game.resign();" />
 					</div>
 				</td>
@@ -541,10 +542,10 @@
 			</tr>
 			<tr>
 				<td class="trade-cell">
-					$&nbsp;<input id="trade-leftp-money" value="0" title="Enter amount to exchange with the other player." />
+					<input id="trade-leftp-money" value="0" title="Enter amount to exchange with the other player." />&nbsp;k
 				</td>
 				<td class="trade-cell">
-					$&nbsp;<input id="trade-rightp-money" value="0" title="Enter amount to exchange with the other player." />
+					<input id="trade-rightp-money" value="0" title="Enter amount to exchange with the other player." />&nbsp;k
 				</td>
 			</tr>
 			<tr>

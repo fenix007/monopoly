@@ -425,7 +425,7 @@ function Game() {
 				currentTableCell = currentTableRow.appendChild(document.createElement("td"));
 				currentTableCell.className = "propertycellname";
 				if (currentSquare.mortgage) {
-					currentTableCell.title = "Mortgaged";
+					currentTableCell.title = "Заложен";
 					currentTableCell.style.color = "grey";
 				}
 				currentTableCell.textContent = currentSquare.name;
@@ -459,7 +459,7 @@ function Game() {
 				currentTableCell = currentTableRow.appendChild(document.createElement("td"));
 				currentTableCell.className = "propertycellname";
 				if (currentSquare.mortgage) {
-					currentTableCell.title = "Mortgaged";
+					currentTableCell.title = "Заложен";
 					currentTableCell.style.color = "grey";
 				}
 				currentTableCell.textContent = currentSquare.name;
@@ -1007,7 +1007,7 @@ function Game() {
 			return;
 		}
 
-		var HTML = "<p>" + player[p.creditor].name + ", you may unmortgage any of the following properties, interest free, by clicking on them. Click OK when finished.</p><table>";
+		var HTML = "<p>" + player[p.creditor].name + ", ты можешь выкупить любую из карточек, кликнув на них. Нажми OK когда закончишь.</p><table>";
 		var price;
 
 		for (var i = 0; i < 40; i++) {
@@ -1024,7 +1024,7 @@ function Game() {
 				}
 
 				// Player already paid interest, so they can unmortgage for the mortgage price.
-				HTML += "' onmouseover='showdeed(" + i + ");' onmouseout='hidedeed();'></td><td class='propertycellname'><a href='javascript:void(0);' title='Unmortgage " + sq.name + " for $" + price + ".' onclick='if (" + price + " <= player[" + p.creditor + "].money) {player[" + p.creditor + "].pay(" + price + ", 0); square[" + i + "].mortgage = false; addAlert(\"" + player[p.creditor].name + " выкупить " + sq.name + " за " + price + "k.\");} this.parentElement.parentElement.style.display = \"none\";'>Выкупить " + sq.name + " (" + price + "k)</a></td></tr>";
+				HTML += "' onmouseover='showdeed(" + i + ");' onmouseout='hidedeed();'></td><td class='propertycellname'><a href='javascript:void(0);' title='Выкупить " + sq.name + " за " + price + "k.' onclick='if (" + price + " <= player[" + p.creditor + "].money) {player[" + p.creditor + "].pay(" + price + ", 0); square[" + i + "].mortgage = false; addAlert(\"" + player[p.creditor].name + " выкупить " + sq.name + " за " + price + "k.\");} this.parentElement.parentElement.style.display = \"none\";'>Выкупить " + sq.name + " (" + price + "k)</a></td></tr>";
 
 				sq.owner = p.creditor;
 
@@ -1037,7 +1037,7 @@ function Game() {
 	};
 
 	this.resign = function() {
-		popup("<p>Are you sure you want to resign?</p>", game.bankruptcy, "Yes/No");
+		popup("<p>Ты увере что хочешь сдаться?</p>", game.bankruptcy, "Да/Нет");
 	};
 
 	this.bankruptcy = function() {
@@ -1050,7 +1050,7 @@ function Game() {
 			return;
 		}
 
-		addAlert(p.name + " is bankrupt.");
+		addAlert(p.name + " банкрот.");
 
 		if (p.creditor !== 0) {
 			pcredit.money += p.money;
@@ -1097,7 +1097,7 @@ function Game() {
 		if (pcount === 2 || bankruptcyUnmortgageFee === 0 || p.creditor === 0) {
 			game.eliminatePlayer();
 		} else {
-			addAlert(pcredit.name + " paid $" + bankruptcyUnmortgageFee + " interest on the mortgaged properties received from " + p.name + ".");
+			addAlert(pcredit.name + " заплатил " + bankruptcyUnmortgageFee + " interest on the mortgaged properties received from " + p.name + ".");
 			popup("<p>" + pcredit.name + ", you must pay $" + bankruptcyUnmortgageFee + " interest on the mortgaged properties you received from " + p.name + ".</p>", function() {player[pcredit.index].pay(bankruptcyUnmortgageFee, 0); game.bankruptcyUnmortgage();});
 		}
 	};
@@ -1594,8 +1594,8 @@ function updateOption() {
 
 		allGroupUnmortgaged = false;
 	} else {
-		document.getElementById("mortgagebutton").value = "Mortgage ($" + (sq.price * 0.5) + ")";
-		document.getElementById("mortgagebutton").title = "Mortgage " + sq.name + " for $" + (sq.price * 0.5) + ".";
+		document.getElementById("mortgagebutton").value = "Залог (" + (sq.price * 0.5) + "k)";
+		document.getElementById("mortgagebutton").title = "Залог " + sq.name + " за " + (sq.price * 0.5) + "k.";
 
 		if (sq.groupNumber >= 3) {
 			$("#buyhousebutton").show();
@@ -1636,7 +1636,7 @@ function updateOption() {
 				if (s.owner !== sq.owner) {
 					buyhousebutton.disabled = true;
 					sellhousebutton.disabled = true;
-					buyhousebutton.title = "Before you can buy a house, you must own all the properties of this color-group.";
+					buyhousebutton.title = "Перед покупкой дома, you must own all the properties of this color-group.";
 				} else {
 
 					if (s.house > maxhouse) {
@@ -1659,7 +1659,7 @@ function updateOption() {
 
 			if (!allGroupUnmortgaged) {
 				buyhousebutton.disabled = true;
-				buyhousebutton.title = "Before you can buy a house, you must unmortgage all the properties of this color-group.";
+				buyhousebutton.title = "Перед покупкой дома, тебе надо выкупить все карточки этой цветовой группы.";
 			}
 
 			// Force even building
@@ -1667,20 +1667,20 @@ function updateOption() {
 				buyhousebutton.disabled = true;
 
 				if (sq.house == 1) {
-					buyhousebutton.title = "Before you can buy another house, the other properties of this color-group must all have one house.";
+					buyhousebutton.title = "Перед покупкой следующего дома, все карточки этой группы должны иметь по одному дому.";
 				} else if (sq.house == 4) {
-					buyhousebutton.title = "Before you can buy a hotel, the other properties of this color-group must all have 4 houses.";
+					buyhousebutton.title = "Перед покупкой отеля, все карточки этой группы должны иметь 4 дома.";
 				} else {
-					buyhousebutton.title = "Before you can buy a house, the other properties of this color-group must all have " + sq.house + " houses.";
+					buyhousebutton.title = "Перед покупкой дома, все карточки этой группы должны иметь " + sq.house + " домов.";
 				}
 			}
 			if (sq.house < maxhouse) {
 				sellhousebutton.disabled = true;
 
 				if (sq.house == 1) {
-					sellhousebutton.title = "Before you can sell house, the other properties of this color-group must all have one house.";
+					sellhousebutton.title = "Перед покупкой дома, все карточки этой группы должны иметь по одному дому.";
 				} else {
-					sellhousebutton.title = "Before you can sell a house, the other properties of this color-group must all have " + sq.house + " houses.";
+					sellhousebutton.title = "Перед покупкой дома, все карточки этой группы должны иметь " + sq.house + " домов.";
 				}
 			}
 
@@ -1694,7 +1694,7 @@ function updateOption() {
 
 			// Before a property can be mortgaged or sold, all the properties of its color-group must unimproved.
 			if (!allGroupUninproved) {
-				document.getElementById("mortgagebutton").title = "Before a property can be mortgaged, all the properties of its color-group must unimproved.";
+				document.getElementById("mortgagebutton").title = "Перед залогом дома, все карточки этой группы не должны иметь домов.";
 				document.getElementById("mortgagebutton").disabled = true;
 			}
 
@@ -1708,27 +1708,8 @@ function updateOption() {
 function chanceCommunityChest() {
 	var p = player[turn];
 
-	// Community Chest
-	if (p.position === 2 || p.position === 17 || p.position === 33) {
-		var communityChestIndex = communityChestCards.deck[communityChestCards.index];
-
-		// Remove the get out of jail free card from the deck.
-		if (communityChestIndex === 0) {
-			communityChestCards.deck.splice(communityChestCards.index, 1);
-		}
-
-		popup("<img src='images/community_chest_icon.png' style='height: 50px; width: 53px; float: left; margin: 8px 8px 8px 0px;' /><div style='font-weight: bold; font-size: 16px; '>Community Chest:</div><div style='text-align: justify;'>" + communityChestCards[communityChestIndex].text + "</div>", function() {
-			communityChestAction(communityChestIndex);
-		});
-
-		communityChestCards.index++;
-
-		if (communityChestCards.index >= communityChestCards.deck.length) {
-			communityChestCards.index = 0;
-		}
-
 	// Chance
-	} else if ([2, 7, 17, 22, 33, 38].indexOf(p.position) !== -1) {
+	if ([2, 7, 17, 22, 33, 38].indexOf(p.position) !== -1) {
 		var chanceIndex = chanceCards.deck[chanceCards.index];
 
 		// Remove the get out of jail free card from the deck.
@@ -1791,7 +1772,7 @@ function addamount(amount, cause) {
 
 	p.money += amount;
 
-	addAlert(p.name + " received $" + amount + " from " + cause + ".");
+	addAlert(p.name + " получил " + amount + "k из-а " + cause + ".");
 }
 
 function subtractamount(amount, cause) {
@@ -1799,7 +1780,7 @@ function subtractamount(amount, cause) {
 
 	p.pay(amount, 0);
 
-	addAlert(p.name + " lost $" + amount + " from " + cause + ".");
+	addAlert(p.name + " проиграл " + amount + "k из-за " + cause + ".");
 }
 
 function gotojail() {
@@ -2047,7 +2028,7 @@ function buyHouse(index) {
 
 			} else {
 				sq.house++;
-				addAlert(p.name + " placed a house on " + sq.name + ".");
+				addAlert(p.name + " placed дома on " + sq.name + ".");
 			}
 
 		} else {
@@ -2078,7 +2059,7 @@ function sellHouse(index) {
 		addAlert(p.name + " sold the hotel on " + sq.name + ".");
 	} else {
 		sq.house--;
-		addAlert(p.name + " sold a house on " + sq.name + ".");
+		addAlert(p.name + " sold дома on " + sq.name + ".");
 	}
 
 	p.money += sq.houseprice * 0.5;
@@ -2109,7 +2090,7 @@ function showStats() {
 				housetext = "";
 
 				if (sq.mortgage) {
-					mortgagetext = "title='Mortgaged' style='color: grey;'";
+					mortgagetext = "title='Заложен' style='color: grey;'";
 				}
 
 				if (!write) {
@@ -2250,10 +2231,10 @@ function mortgage(index) {
 	sq.mortgage = true;
 	p.money += mortgagePrice;
 
-	document.getElementById("mortgagebutton").value = "Unmortgage for $" + unmortgagePrice;
-	document.getElementById("mortgagebutton").title = "Unmortgage " + sq.name + " for $" + unmortgagePrice + ".";
+	document.getElementById("mortgagebutton").value = "Выкупить за " + unmortgagePrice + "k";
+	document.getElementById("mortgagebutton").title = "Выкупить " + sq.name + " за " + unmortgagePrice + "k.";
 
-	addAlert(p.name + " mortgaged " + sq.name + " for $" + mortgagePrice + ".");
+	addAlert(p.name + " заложен " + sq.name + " за " + mortgagePrice + "k.");
 	updateOwned();
 	updateMoney();
 
@@ -2272,10 +2253,10 @@ function unmortgage(index) {
 
 	p.pay(unmortgagePrice, 0);
 	sq.mortgage = false;
-	document.getElementById("mortgagebutton").value = "Mortgage for $" + mortgagePrice;
-	document.getElementById("mortgagebutton").title = "Mortgage " + sq.name + " for $" + mortgagePrice + ".";
+	document.getElementById("mortgagebutton").value = "Заложить за" + mortgagePrice + "k";
+	document.getElementById("mortgagebutton").title = "Заложить " + sq.name + " за " + mortgagePrice + "k.";
 
-	addAlert(p.name + " unmortgaged " + sq.name + " for $" + unmortgagePrice + ".");
+	addAlert(p.name + " выкупить " + sq.name + " за " + unmortgagePrice + "k.");
 	updateOwned();
 	return true;
 }
